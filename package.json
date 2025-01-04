@@ -1,0 +1,16 @@
+{
+  "name": "gemini-2-live-api-demo",
+  "version": "1.0.0",
+  "description": "Gemini 2.0 Live API Demo",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

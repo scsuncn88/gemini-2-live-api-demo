@@ -5,7 +5,8 @@
  * from environment variables. Default values are provided for all settings.
  */
 
-const env = window.__ENV__ || {};
+// 兼容前端和Cloudflare Workers环境
+const env = typeof window !== 'undefined' ? window.__ENV__ || {} : process.env || {};
 
 // Validate required configuration
 const validateConfig = (config) => {

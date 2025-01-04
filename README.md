@@ -26,14 +26,36 @@ This is a simplified version of [Google's original React implementation](https:/
 ## Quick Start
 
 1. Clone the repository
-2. Set up your API key:
+2. Set up your environment variables:
+
+   Create a `.env` file in the project root:
 
    ```bash
-   cp js/config/config.example.js js/config/config.js
-   # Edit js/config/config.js with your API key
+   cp .env.example .env
    ```
 
-3. Start the development server:
+   Edit the `.env` file with your configuration:
+
+   ```bash
+   API_KEY=your_api_key_here
+   API_BASE_URL=wss://generativelanguage.googleapis.com/ws
+   API_VERSION=v1alpha
+   API_MODEL_NAME=models/gemini-2.0-flash-exp
+   SYSTEM_INSTRUCTION_TEXT=You are my helpful assistant...
+   VOICE_NAME=Aoede
+   AUDIO_INPUT_SAMPLE_RATE=16000
+   AUDIO_OUTPUT_SAMPLE_RATE=24000
+   AUDIO_BUFFER_SIZE=7680
+   AUDIO_CHANNELS=1
+   ```
+
+3. Build the project:
+
+   ```bash
+   npm run build
+   ```
+
+4. Start the development server:
 
    ```bash
    python -m http.server 8000

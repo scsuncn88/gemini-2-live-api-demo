@@ -1,4 +1,32 @@
+/**
+ * Application Configuration
+ * 
+ * Configuration is loaded from window.__ENV__ which is injected by build.js
+ * from environment variables. Default values are provided for all settings.
+ */
+
 const env = window.__ENV__ || {};
+
+// Validate required configuration
+const validateConfig = (config) => {
+  if (!config.API_KEY) {
+    console.warn('API_KEY is missing. Using default value.');
+  }
+  
+  if (!config.API_BASE_URL) {
+    console.warn('API_BASE_URL is missing. Using default value.');
+  }
+
+  // Validate audio settings
+  const validSampleRates = [8000, 16000, 24000, 48000];
+  if (!validSampleRates.includes(config.AUDIO_INPUT_SAMPLE_RATE)) {
+    console.warn(`Invalid AUDIO_INPUT_SAMPLE_RATE: ${config.AUDIO_INPUT_SAMPLE_RATE}. Using default value.`);
+  }
+  
+  if (!validSampleRates.includes(config.AUDIO_OUTPUT_SAMPLE_RATE)) {
+    console.warn(`Invalid AUDIO_OUTPUT_SAMPLE_RATE: ${config.AUDIO_OUTPUT_SAMPLE_RATE}. Using default value.`);
+  }
+};
 
 export const CONFIG = {
   API: {
@@ -12,6 +40,7 @@ export const CONFIG = {
   },
   VOICE: {
     NAME: env.VOICE_NAME || 'Aoede',
+    VALID_NAMES: ['Puck', 'Charon', 'Kore', 'Fenrir', 'Aoede']
   },
   AUDIO: {
     INPUT_SAMPLE_RATE: parseInt(env.AUDIO_INPUT_SAMPLE_RATE) || 16000,
@@ -21,15 +50,15 @@ export const CONFIG = {
   },
 };
 
-console.log('API_KEY:', CONFIG.API.KEY);
-console.log('API_BASE_URL:', CONFIG.API.BASE_URL);
-console.log('API_VERSION:', CONFIG.API.VERSION);
-console.log('API_MODEL_NAME:', CONFIG.API.MODEL_NAME);
-console.log('SYSTEM_INSTRUCTION_TEXT:', CONFIG.SYSTEM_INSTRUCTION.TEXT);
-console.log('VOICE_NAME:', CONFIG.VOICE.NAME);
-console.log('AUDIO_INPUT_SAMPLE_RATE:', CONFIG.AUDIO.INPUT_SAMPLE_RATE);
-console.log('AUDIO_OUTPUT_SAMPLE_RATE:', CONFIG.AUDIO.OUTPUT_SAMPLE_RATE);
-console.log('AUDIO_BUFFER_SIZE:', CONFIG.AUDIO.BUFFER_SIZE);
-console.log('AUDIO_CHANNELS:', CONFIG.AUDIO.CHANNELS);
+// Validate configuration
+validateConfig(CONFIG);
+
+// Log configuration
+console.group('Application Configuration');
+console.log('API:', CONFIG.API);
+console.log('SYSTEM_INSTRUCTION:', CONFIG.SYSTEM_INSTRUCTION);
+console.log('VOICE:', CONFIG.VOICE);
+console.log('AUDIO:', CONFIG.AUDIO);
+console.groupEnd();
 
 export default CONFIG;

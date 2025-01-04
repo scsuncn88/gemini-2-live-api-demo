@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// 读取环境变量
+// 读取 index.html
+const indexPath = path.join(__dirname, 'index.html');
+let content = fs.readFileSync(indexPath, 'utf8');
+
+// 注入环境变量到 window.__ENV__
 const envVars = {
   API_KEY: process.env.API_KEY,
   API_BASE_URL: process.env.API_BASE_URL,
@@ -15,15 +19,14 @@ const envVars = {
   AUDIO_CHANNELS: process.env.AUDIO_CHANNELS
 };
 
-// 读取 index.html
-const indexPath = path.join(__dirname, 'index.html');
-let content = fs.readFileSync(indexPath, 'utf8');
+const envScript = `
+  <script>
+    window.__ENV__ = ${JSON.stringify(envVars)};
+  </script>
+`;
 
-// 替换占位符
-for (const [key, value] of Object.entries(envVars)) {
-  const placeholder = `%%${key}%%`;
-  content = content.replace(new RegExp(placeholder, 'g'), value);
-}
+// 在head标签结束前插入环境变量脚本
+content = content.replace('</head>', `${envScript}</head>`);
 
 // 写入修改后的内容
 fs.writeFileSync(indexPath, content);

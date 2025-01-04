@@ -3,3 +3,15 @@ command = "npm run build"
 
 [build.environment]
 NODE_VERSION = "18"
+
+[env]
+API_KEY = "@api_key"
+API_BASE_URL = "@api_base_url"
+API_VERSION = "@api_version"
+API_MODEL_NAME = "@api_model_name"
+SYSTEM_INSTRUCTION_TEXT = "@system_instruction_text"
+VOICE_NAME = "@voice_name"
+AUDIO_INPUT_SAMPLE_RATE = "@audio_input_sample_rate"
+AUDIO_OUTPUT_SAMPLE_RATE = "@audio_output_sample_rate"
+AUDIO_BUFFER_SIZE = "@audio_buffer_size"
+AUDIO_CHANNELS = "@audio_channels"

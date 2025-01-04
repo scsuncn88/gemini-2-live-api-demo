@@ -19,4 +19,14 @@ export const CONFIG = {
     },
 };
 
-export default CONFIG;
+  console.log('API_KEY:', import.meta.env?.API_KEY);
+  console.log('API_BASE_URL:', import.meta.env?.API_BASE_URL);
+  console.log('API_VERSION:', import.meta.env?.API_VERSION);
+  console.log('API_MODEL_NAME:', import.meta.env?.API_MODEL_NAME);
+  console.log('SYSTEM_INSTRUCTION_TEXT:', import.meta.env?.SYSTEM_INSTRUCTION_TEXT);
+  console.log('VOICE_NAME:', import.meta.env?.VOICE_NAME);
+  console.log('AUDIO_INPUT_SAMPLE_RATE:', import.meta.env?.AUDIO_INPUT_SAMPLE_RATE);
+  console.log('AUDIO_OUTPUT_SAMPLE_RATE:', import.meta.env?.AUDIO_OUTPUT_SAMPLE_RATE);
+  console.log('AUDIO_BUFFER_SIZE:', import.meta.env?.AUDIO_BUFFER_SIZE);
+  console.log('AUDIO_CHANNELS:', import.meta.env?.AUDIO_CHANNELS);
+  export default CONFIG;

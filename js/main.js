@@ -332,22 +332,26 @@ async function handleMicToggle() {
             const inputDataArray = new Uint8Array(inputAnalyser.frequencyBinCount);
             
             await audioRecorder.start((base64Data) => {
-                if (isUsingTool) {
-                    client.sendRealtimeInput([{
-                        mimeType: "audio/pcm;rate=16000",
-                        data: base64Data,
-                        interrupt: true     // Model isn't interruptable when using tools, so we do it manually
-                    }]);
+                if (isConnected) {
+                    if (isUsingTool) {
+                        client.sendRealtimeInput([{
+                            mimeType: "audio/pcm;rate=16000",
+                            data: base64Data,
+                            interrupt: true     // Model isn't interruptable when using tools, so we do it manually
+                        }]);
+                    } else {
+                        client.sendRealtimeInput([{
+                            mimeType: "audio/pcm;rate=16000",
+                            data: base64Data
+                        }]);
+                    }
+                    
+                    inputAnalyser.getByteFrequencyData(inputDataArray);
+                    const inputVolume = Math.max(...inputDataArray) / 255;
+                    updateAudioVisualizer(inputVolume, true);
                 } else {
-                    client.sendRealtimeInput([{
-                        mimeType: "audio/pcm;rate=16000",
-                        data: base64Data
-                    }]);
+                    logMessage('WebSocket is not connected. Please connect first.', 'system');
                 }
-                
-                inputAnalyser.getByteFrequencyData(inputDataArray);
-                const inputVolume = Math.max(...inputDataArray) / 255;
-                updateAudioVisualizer(inputVolume, true);
             });
 
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -477,9 +481,13 @@ function disconnectFromWebsocket() {
 function handleSendMessage() {
     const message = messageInput.value.trim();
     if (message) {
-        logMessage(message, 'user');
-        client.send({ text: message });
-        messageInput.value = '';
+        if (isConnected) {
+            logMessage(message, 'user');
+            client.send({ text: message });
+            messageInput.value = '';
+        } else {
+            logMessage('WebSocket is not connected. Please connect first.', 'system');
+        }
     }
 }
 
@@ -691,4 +699,3 @@ function stopScreenSharing() {
 
 screenButton.addEventListener('click', handleScreenShare);
 screenButton.disabled = true;
-  

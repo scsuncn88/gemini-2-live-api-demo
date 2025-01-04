@@ -431,14 +431,17 @@ async function connectToWebsocket() {
         const errorMessage = error.message || 'Unknown error';
         Logger.error('Connection error:', error);
         logMessage(`Connection error: ${errorMessage}`, 'system');
-        isConnected = false;
-        connectButton.textContent = 'Connect';
-        connectButton.classList.remove('connected');
-        messageInput.disabled = true;
-        sendButton.disabled = true;
-        micButton.disabled = true;
-        cameraButton.disabled = true;
-        screenButton.disabled = true;
+    } finally {
+        if (!isConnected) {
+            isConnected = false;
+            connectButton.textContent = 'Connect';
+            connectButton.classList.remove('connected');
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+            micButton.disabled = true;
+            cameraButton.disabled = true;
+            screenButton.disabled = true;
+        }
     }
 }
 

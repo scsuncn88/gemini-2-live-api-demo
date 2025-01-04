@@ -1,21 +1,23 @@
+const env = window.__ENV__ || {};
+
 export const CONFIG = {
   API: {
-    KEY: window.__ENV__.API_KEY || 'default_api_key',
-    BASE_URL: window.__ENV__.API_BASE_URL || 'wss://generativelanguage.googleapis.com/ws',
-    VERSION: window.__ENV__.API_VERSION || 'v1alpha',
-    MODEL_NAME: window.__ENV__.API_MODEL_NAME || 'models/gemini-2.0-flash-exp',
+    KEY: env.API_KEY || 'default_api_key',
+    BASE_URL: env.API_BASE_URL || 'wss://generativelanguage.googleapis.com/ws',
+    VERSION: env.API_VERSION || 'v1alpha',
+    MODEL_NAME: env.API_MODEL_NAME || 'models/gemini-2.0-flash-exp',
   },
   SYSTEM_INSTRUCTION: {
-    TEXT: window.__ENV__.SYSTEM_INSTRUCTION_TEXT || 'You are my helpful assistant...',
+    TEXT: env.SYSTEM_INSTRUCTION_TEXT || 'You are my helpful assistant...',
   },
   VOICE: {
-    NAME: window.__ENV__.VOICE_NAME || 'Aoede',
+    NAME: env.VOICE_NAME || 'Aoede',
   },
   AUDIO: {
-    INPUT_SAMPLE_RATE: parseInt(window.__ENV__.AUDIO_INPUT_SAMPLE_RATE) || 16000,
-    OUTPUT_SAMPLE_RATE: parseInt(window.__ENV__.AUDIO_OUTPUT_SAMPLE_RATE) || 24000,
-    BUFFER_SIZE: parseInt(window.__ENV__.AUDIO_BUFFER_SIZE) || 7680,
-    CHANNELS: parseInt(window.__ENV__.AUDIO_CHANNELS) || 1,
+    INPUT_SAMPLE_RATE: parseInt(env.AUDIO_INPUT_SAMPLE_RATE) || 16000,
+    OUTPUT_SAMPLE_RATE: parseInt(env.AUDIO_OUTPUT_SAMPLE_RATE) || 24000,
+    BUFFER_SIZE: parseInt(env.AUDIO_BUFFER_SIZE) || 7680,
+    CHANNELS: parseInt(env.AUDIO_CHANNELS) || 1,
   },
 };
 

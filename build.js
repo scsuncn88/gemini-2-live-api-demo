@@ -26,18 +26,18 @@ requiredEnvVars.forEach(envVar => {
   }
 });
 
-// 在Cloudflare Workers环境下直接使用process.env
-const envVars = typeof process !== 'undefined' && process.env ? process.env : {
-  API_KEY: 'default_api_key',
-  API_BASE_URL: 'wss://generativelanguage.googleapis.com/ws',
-  API_VERSION: 'v1alpha',
-  API_MODEL_NAME: 'models/gemini-2.0-flash-exp',
-  SYSTEM_INSTRUCTION_TEXT: 'You are my helpful assistant...',
-  VOICE_NAME: 'Aoede',
-  AUDIO_INPUT_SAMPLE_RATE: 16000,
-  AUDIO_OUTPUT_SAMPLE_RATE: 24000,
-  AUDIO_BUFFER_SIZE: 7680,
-  AUDIO_CHANNELS: 1
+// 注入全局环境变量
+const envVars = {
+  API_KEY: process.env.API_KEY || 'default_api_key',
+  API_BASE_URL: process.env.API_BASE_URL || 'wss://generativelanguage.googleapis.com/ws',
+  API_VERSION: process.env.API_VERSION || 'v1alpha',
+  API_MODEL_NAME: process.env.API_MODEL_NAME || 'models/gemini-2.0-flash-exp',
+  SYSTEM_INSTRUCTION_TEXT: process.env.SYSTEM_INSTRUCTION_TEXT || 'You are my helpful assistant...',
+  VOICE_NAME: process.env.VOICE_NAME || 'Aoede',
+  AUDIO_INPUT_SAMPLE_RATE: parseInt(process.env.AUDIO_INPUT_SAMPLE_RATE) || 16000,
+  AUDIO_OUTPUT_SAMPLE_RATE: parseInt(process.env.AUDIO_OUTPUT_SAMPLE_RATE) || 24000,
+  AUDIO_BUFFER_SIZE: parseInt(process.env.AUDIO_BUFFER_SIZE) || 7680,
+  AUDIO_CHANNELS: parseInt(process.env.AUDIO_CHANNELS) || 1
 };
 
 const envScript = `

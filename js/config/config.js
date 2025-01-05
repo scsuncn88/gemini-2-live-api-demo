@@ -31,7 +31,7 @@ const validateConfig = (config) => {
 
 export const CONFIG = {
   API: {
-    KEY: env.API_KEY || 'default_api_key',
+    // 使用服务器端配置，不在页面上调用API_KEY
     BASE_URL: env.API_BASE_URL || 'wss://generativelanguage.googleapis.com/ws',
     VERSION: env.API_VERSION || 'v1alpha',
     MODEL_NAME: env.API_MODEL_NAME || 'models/gemini-2.0-flash-exp',

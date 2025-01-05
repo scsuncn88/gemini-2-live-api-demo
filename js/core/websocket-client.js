@@ -1,4 +1,4 @@
-import { EventEmitter } from 'https://cdn.skypack.dev/eventemitter3';
+import EventEmitter from 'https://cdn.skypack.dev/eventemitter3?min'; // Use minified version for better performance
 import { blobToJSON, base64ToArrayBuffer } from '../utils/utils.js';
 import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
 import { Logger } from '../utils/logger.js';
@@ -294,4 +294,4 @@ export class MultimodalLiveClient extends EventEmitter {
             });
         }
     }
-} 
+}

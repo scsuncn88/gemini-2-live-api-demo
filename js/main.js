@@ -1,4 +1,6 @@
-import { MultimodalLiveClient } from './core/websocket-client.js';let client = new MultimodalLiveClient({ apiKey: '' }); // Initially empty API Key
+import { MultimodalLiveClient } from './core/websocket-client.js';
+
+let client; // Initialize client as undefined and set after API Key is provided
 
 document.getElementById('set-api-key').addEventListener('click', () => {
     const apiKeyInput = document.getElementById('api-key').value.trim();

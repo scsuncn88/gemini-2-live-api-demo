@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .status {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    .connected {
+      background: #d4edda;
+      color: #155724;
+    }
+    .disconnected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .log {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .log-entry {
+      margin-bottom: 10px;
+      padding: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+    .log-entry.timestamp {
+      color: #666;
+      font-size: 0.8em;
+    }
+    .log-entry.message {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WebSocket Test Page</h1>
+    
+    <div class="controls">
+      <label for="token">Authorization Token:</label>
+      <input type="text" id="token" placeholder="Enter Bearer token">
+      
+      <button id="connectBtn">Connect</button>
+      <button id="disconnectBtn" disabled>Disconnect</button>
+      
+      <div class="message-controls" style="margin-top: 20px;">
+        <textarea id="messageInput" placeholder="Enter message to send" style="width: 100%; height: 100px;"></textarea>
+        <button id="sendBtn" disabled>Send Message</button>
+      </div>
+    </div>
+
+    <div id="status" class="status disconnected">Disconnected</div>
+
+    <div class="log" id="log"></div>
+  </div>
+
+  <script>
+    let ws = null;
+    const logElement = document.getElementById('log');
+    const statusElement = document.getElementById('status');
+    const connectBtn = document.getElementById('connectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const tokenInput = document.getElementById('token');
+
+    function logMessage(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      
+      const timestamp = document.createElement('div');
+      timestamp.className = 'log-entry timestamp';
+      timestamp.textContent = new Date().toLocaleString();
+      entry.appendChild(timestamp);
+
+      const content = document.createElement('div');
+      content.className = `log-entry message ${type}`;
+      content.textContent = typeof message === 'string' ? message : JSON.stringify(message, null, 2);
+      entry.appendChild(content);
+
+      logElement.appendChild(entry);
+      logElement.scrollTop = logElement.scrollHeight;
+    }
+
+    function updateStatus(connected) {
+      statusElement.className = `status ${connected ? 'connected' : 'disconnected'}`;
+      statusElement.textContent = connected ? 'Connected' : 'Disconnected';
+      connectBtn.disabled = connected;
+      disconnectBtn.disabled = !connected;
+    }
+
+    const sendBtn = document.getElementById('sendBtn');
+    const messageInput = document.getElementById('messageInput');
+
+    connectBtn.addEventListener('click', () => {
+      // Fetch the auth token from environment variables on the server side
+      // Accessing Cloudflare Pages environment variable
+      const token = "%%AUTH_TOKEN%%";
+      if (!token) {
+        alert('Please enter a valid token');
+        return;
+      }
+      // Add token as a query parameter in the WebSocket URL
+      const wsUrl = `wss://geminiwebsockets.yamasun001-85b.workers.dev?token=${encodeURIComponent(token)}`;
+      ws = new WebSocket(wsUrl);
+      ws.addEventListener('open', () => {
+        // Send token as the first message for authentication
+        ws.send(JSON.stringify({ token: `Bearer ${token}` }));
+        updateStatus(true);
+        logMessage('WebSocket connection established and token sent for authentication.');
+        sendBtn.disabled = false;
+      });
+      
+      ws.addEventListener('open', () => {
+        updateStatus(true);
+        logMessage('WebSocket connection established');
+        sendBtn.disabled = false;
+      });
+
+      ws.addEventListener('message', (event) => {
+        logMessage({
+          type: 'received',
+          data: event.data
+        });
+      });
+
+      ws.addEventListener('close', () => {
+        updateStatus(false);
+        logMessage('WebSocket connection closed');
+      });
+
+      ws.addEventListener('error', (error) => {
+        logMessage(`WebSocket error: ${error.message}`, 'error');
+      });
+    });
+
+    disconnectBtn.addEventListener('click', () => {
+      if (ws) {
+        ws.close();
+        sendBtn.disabled = true;
+      }
+    });
+
+    sendBtn.addEventListener('click', () => {
+      const message = messageInput.value.trim();
+      if (!message) {
+        alert('Please enter a message to send');
+        return;
+      }
+      
+      try {
+        const payload = {
+          action: 'test',
+          token: `Bearer ${token}`,  // Add token in the message payload
+          data: message
+        };
+        ws.send(JSON.stringify(payload));
+        logMessage({
+          type: 'sent',
+          data: payload
+        });
+        messageInput.value = '';
+      } catch (error) {
+        logMessage(`Error sending message: ${error.message}`, 'error');
+      }
+    });
+  </script>
+</body>
+</html>

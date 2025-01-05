@@ -7,6 +7,7 @@ document.getElementById('set-api-key').addEventListener('click', () => {
     if (apiKeyInput) {
         client = new MultimodalLiveClient({ apiKey: apiKeyInput });
         console.log('API Key is set. Now you can connect.');
+        document.getElementById('api-key-status').style.display = 'block'; // Show status message
         client.on('open', () => {
             logMessage('Connected to Gemini 2.0 Flash Multimodal Live API through Worker', 'system');
             logStatus('Connected to Gemini 2.0 Flash Multimodal Live API through Worker');

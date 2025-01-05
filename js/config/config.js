@@ -1,65 +1,43 @@
 /**
  * Application Configuration
  * 
- * Configuration is loaded from window.__ENV__ which is injected by build.js
- * from environment variables. Default values are provided for all settings.
+ * Configuration is directly loaded from Cloudflare environment variables
+ * available in the env parameter. Default values are provided for all settings.
  */
 
-// 前端环境使用window.__ENV__，Cloudflare Workers环境直接使用env参数
-const env = typeof window !== 'undefined' ? window.__ENV__ || {} : {};
+export default {
+  async fetch(request, env, ctx) {
+    const API_KEY = env.API_KEY || 'default_api_key';
+    const API_HOST = env.API_HOST || 'wss://generativelanguage.googleapis.com/ws';
+    const API_VERSION = env.API_VERSION || 'v1alpha';
+    const API_MODEL_NAME = env.API_MODEL_NAME || 'models/gemini-2.0-flash-exp';
+    const SYSTEM_INSTRUCTION_TEXT = env.SYSTEM_INSTRUCTION_TEXT || 'You are my helpful assistant...';
+    const VOICE_NAME = env.VOICE_NAME || 'Aoede';
+    const AUDIO_INPUT_SAMPLE_RATE = parseInt(env.AUDIO_INPUT_SAMPLE_RATE) || 16000;
+    const AUDIO_OUTPUT_SAMPLE_RATE = parseInt(env.AUDIO_OUTPUT_SAMPLE_RATE) || 24000;
+    const AUDIO_BUFFER_SIZE = parseInt(env.AUDIO_BUFFER_SIZE) || 7680;
+    const AUDIO_CHANNELS = parseInt(env.AUDIO_CHANNELS) || 1;
 
-// Validate required configuration
-const validateConfig = (config) => {
-  if (!config.API_KEY) {
-    console.warn('API_KEY is missing. Using default value.');
-  }
-  
-  if (!config.API_BASE_URL) {
-    console.warn('API_BASE_URL is missing. Using default value.');
-  }
-
-  // Validate audio settings
-  const validSampleRates = [8000, 16000, 24000, 48000];
-  if (!validSampleRates.includes(config.AUDIO_INPUT_SAMPLE_RATE)) {
-    console.warn(`Invalid AUDIO_INPUT_SAMPLE_RATE: ${config.AUDIO_INPUT_SAMPLE_RATE}. Using default value.`);
-  }
-  
-  if (!validSampleRates.includes(config.AUDIO_OUTPUT_SAMPLE_RATE)) {
-    console.warn(`Invalid AUDIO_OUTPUT_SAMPLE_RATE: ${config.AUDIO_OUTPUT_SAMPLE_RATE}. Using default value.`);
+    return new Response(JSON.stringify({
+      API: {
+        KEY: API_KEY,
+        HOST: API_HOST,
+        VERSION: API_VERSION,
+        MODEL_NAME: API_MODEL_NAME,
+      },
+      SYSTEM_INSTRUCTION: {
+        TEXT: SYSTEM_INSTRUCTION_TEXT,
+      },
+      VOICE: {
+        NAME: VOICE_NAME,
+        VALID_NAMES: ['Puck', 'Charon', 'Kore', 'Fenrir', 'Aoede']
+      },
+      AUDIO: {
+        INPUT_SAMPLE_RATE: AUDIO_INPUT_SAMPLE_RATE,
+        OUTPUT_SAMPLE_RATE: AUDIO_OUTPUT_SAMPLE_RATE,
+        BUFFER_SIZE: AUDIO_BUFFER_SIZE,
+        CHANNELS: AUDIO_CHANNELS,
+      },
+    }, null, 2), { headers: { 'Content-Type': 'application/json' } });
   }
 };
-
-export const CONFIG = {
-  API: {
-    // 使用服务器端配置，不在页面上调用API_KEY
-    BASE_URL: env.API_BASE_URL || 'wss://generativelanguage.googleapis.com/ws',
-    VERSION: env.API_VERSION || 'v1alpha',
-    MODEL_NAME: env.API_MODEL_NAME || 'models/gemini-2.0-flash-exp',
-  },
-  SYSTEM_INSTRUCTION: {
-    TEXT: env.SYSTEM_INSTRUCTION_TEXT || 'You are my helpful assistant...',
-  },
-  VOICE: {
-    NAME: env.VOICE_NAME || 'Aoede',
-    VALID_NAMES: ['Puck', 'Charon', 'Kore', 'Fenrir', 'Aoede']
-  },
-  AUDIO: {
-    INPUT_SAMPLE_RATE: parseInt(env.AUDIO_INPUT_SAMPLE_RATE) || 16000,
-    OUTPUT_SAMPLE_RATE: parseInt(env.AUDIO_OUTPUT_SAMPLE_RATE) || 24000,
-    BUFFER_SIZE: parseInt(env.AUDIO_BUFFER_SIZE) || 7680,
-    CHANNELS: parseInt(env.AUDIO_CHANNELS) || 1,
-  },
-};
-
-// Validate configuration
-validateConfig(CONFIG);
-
-// Log configuration
-console.group('Application Configuration');
-console.log('API:', CONFIG.API);
-console.log('SYSTEM_INSTRUCTION:', CONFIG.SYSTEM_INSTRUCTION);
-console.log('VOICE:', CONFIG.VOICE);
-console.log('AUDIO:', CONFIG.AUDIO);
-console.groupEnd();
-
-export default CONFIG;

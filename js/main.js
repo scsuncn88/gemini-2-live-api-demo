@@ -65,7 +65,18 @@ let screenRecorder = null;
 let isUsingTool = false;
 
 // Multimodal Client
-const client = new MultimodalLiveClient({ apiKey: CONFIG.API.KEY });
+let client;
+
+document.getElementById('set-api-key').addEventListener('click', () => {
+    const apiKeyInput = document.getElementById('api-key').value.trim();
+    if (apiKeyInput) {
+        client = new MultimodalLiveClient({ apiKey: apiKeyInput });
+        console.log('API Key is set. Now you can connect.');
+    } else {
+        alert('Please enter a valid API Key.');
+    }
+});
+
 
 // 使用Cloudflare提供的环境变量
 const authToken = window.__ENV__.AUTH_TOKEN;

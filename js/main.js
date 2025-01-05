@@ -6,6 +6,7 @@ document.getElementById('set-api-key').addEventListener('click', () => {
     const apiKeyInput = document.getElementById('api-key').value.trim();
     if (apiKeyInput) {
         client = new MultimodalLiveClient({ apiKey: apiKeyInput });
+        document.getElementById('api-key-status').style.display = 'block'; // Display the status message for successful API Key setting
         console.log('API Key is set. Now you can connect.');
         document.getElementById('api-key-status').style.display = 'block'; // Show status message
         client.on('open', () => {

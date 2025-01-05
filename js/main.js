@@ -1,9 +1,3 @@
-export default {
-  async fetch(request, env, ctx) {
-    return new Response(`API host: ${env.API_HOST}`);
-  }
-}
-
 import { MultimodalLiveClient } from './core/websocket-client.js';
 import { AudioStreamer } from './audio/audio-streamer.js';
 import { AudioRecorder } from './audio/audio-recorder.js';
@@ -72,6 +66,9 @@ let isUsingTool = false;
 
 // Multimodal Client
 const client = new MultimodalLiveClient({ apiKey: CONFIG.API.KEY });
+
+// 使用Cloudflare提供的环境变量
+const authToken = window.__ENV__.AUTH_TOKEN;
 
 // Test Cloudflare Workers env
 if (typeof env !== 'undefined') {

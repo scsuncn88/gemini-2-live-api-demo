@@ -5,13 +5,25 @@ document.getElementById('set-api-key').addEventListener('click', () => {
     if (apiKeyInput) {
         client = new MultimodalLiveClient({ apiKey: apiKeyInput });
         console.log('API Key is set. Now you can connect.');
+        client.on('open', () => {
+            logMessage('Connected to Gemini 2.0 Flash Multimodal Live API through Worker', 'system');
+            logStatus('Connected to Gemini 2.0 Flash Multimodal Live API through Worker');
+        });
+
+        client.on('close', () => {
+            logMessage('Disconnected from Worker', 'system');
+            logStatus('Disconnected from Worker');
+        });
+
     } else {
+
         alert('Please enter a valid API Key.');
     }
 });
 
 client.on('open', () => {
     logMessage('WebSocket connection opened', 'system');
+    logStatus('WebSocket connection opened');
 });
 import { AudioStreamer } from './audio/audio-streamer.js';
 import { AudioRecorder } from './audio/audio-recorder.js';
@@ -294,6 +306,17 @@ function logMessage(message, type = 'system') {
 }
 
 /**
+ * Logs a status message to the status-messages section.
+ * @param {string} message - The status message to log.
+ */
+function logStatus(message) {
+    const statusMessages = document.getElementById('status-messages');
+    const statusEntry = document.createElement('li');
+    statusEntry.textContent = message;
+    statusMessages.appendChild(statusEntry);
+}
+
+/**
  * Updates the microphone icon based on the recording state.
  */
 function updateMicIcon() {
@@ -521,14 +544,17 @@ function handleSendMessage() {
 // Event Listeners
 client.on('open', () => {
     logMessage('WebSocket connection opened', 'system');
+    logStatus('WebSocket connection opened');
 });
 
 client.on('log', (log) => {
     logMessage(`${log.type}: ${JSON.stringify(log.message)}`, 'system');
+    logStatus(`${log.type}: ${JSON.stringify(log.message)}`);
 });
 
 client.on('close', (event) => {
     logMessage(`WebSocket connection closed (code ${event.code})`, 'system');
+    logStatus(`WebSocket connection closed (code ${event.code})`);
 });
 
 client.on('audio', async (data) => {

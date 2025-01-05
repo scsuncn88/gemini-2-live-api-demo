@@ -1,4 +1,18 @@
-import { MultimodalLiveClient } from './core/websocket-client.js';
+import { MultimodalLiveClient } from './core/websocket-client.js';let client = new MultimodalLiveClient({ apiKey: '' }); // Initially empty API Key
+
+document.getElementById('set-api-key').addEventListener('click', () => {
+    const apiKeyInput = document.getElementById('api-key').value.trim();
+    if (apiKeyInput) {
+        client = new MultimodalLiveClient({ apiKey: apiKeyInput });
+        console.log('API Key is set. Now you can connect.');
+    } else {
+        alert('Please enter a valid API Key.');
+    }
+});
+
+client.on('open', () => {
+    logMessage('WebSocket connection opened', 'system');
+});
 import { AudioStreamer } from './audio/audio-streamer.js';
 import { AudioRecorder } from './audio/audio-recorder.js';
 import { CONFIG } from './config/config.js';

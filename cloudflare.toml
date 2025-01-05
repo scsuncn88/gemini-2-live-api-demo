@@ -1,5 +1,8 @@
+name = "gemini-2-live-api"
+
 [build]
-command = "npm run build"
+command = "npm run build" 
+main = "js/main.js"
 
 [build.environment]
 NODE_VERSION = "18"

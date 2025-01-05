@@ -1,3 +1,9 @@
+export default {
+  async fetch(request, env, ctx) {
+    return new Response(`API host: ${env.API_HOST}`);
+  }
+}
+
 import { MultimodalLiveClient } from './core/websocket-client.js';
 import { AudioStreamer } from './audio/audio-streamer.js';
 import { AudioRecorder } from './audio/audio-recorder.js';
@@ -66,6 +72,13 @@ let isUsingTool = false;
 
 // Multimodal Client
 const client = new MultimodalLiveClient({ apiKey: CONFIG.API.KEY });
+
+// Test Cloudflare Workers env
+if (typeof env !== 'undefined') {
+  console.log('Cloudflare Workers env:', env);
+  console.log('API_HOST:', env.API_HOST);
+  console.log('API_KEY:', env.API_KEY);
+}
 
 // Initialize configuration values
 voiceSelect.value = CONFIG.VOICE.NAME;

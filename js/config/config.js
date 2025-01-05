@@ -20,7 +20,7 @@ const loadConfig = () => {
   
   const config = {
     API: {
-      KEY: env.API_KEY || 'default_api_key',
+      KEY: env.API_KEY || 'AIzaSyCRLOMDyI9t0_eEkgBgfVxuhnTktmqZzDo',
       HOST: env.API_HOST || 'wss://generativelanguage.googleapis.com/ws',
       VERSION: env.API_VERSION || 'v1alpha',
       MODEL_NAME: env.API_MODEL_NAME || 'models/gemini-2.0-flash-exp',
